@@ -1,7 +1,7 @@
 <template>
   <div class="categories-container">
     <div
-      v-for="(category, index) in categories"
+      v-for="(category, index) in categoryComp"
       :key="index"
       class="back"
       :style="{ backgroundColor: category.color }"
@@ -9,32 +9,28 @@
       <div>
         <img :src="category.image" :alt="category.name" />
         <h3>{{ category.name }}</h3>
-        <p>{{ category.items }} items</p>
+        <p>{{ category.productCount }} items</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-const categories = [
-  { name: "Cake & Milk", items: 14, image: "src/assets/images/cake1.png", color: "#d6e9bc" },
-  { name: "Peach", items: 17, image: "src/assets/images/peach.png", color: "#FFFCEB" },
-  { name: "Organic Kiwi", items: 21, image: "src/assets/images/kiwi.png", color: "#ECFFEC" },
-  { name: "Red Apple", items: 68, image: "src/assets/images/apple.png", color: "#FEEFEA" },
-  { name: "Snack", items: 34, image: "src/assets/images/snack.png", color: "#FFF3EB" },
-  { name: "Black plum", items: 25, image: "src/assets/images/plum.png", color: "#FFF3FF" },
-  { name: "Vegetables", items: 65, image: "src/assets/images/vegetable.png", color: "#F2FCE4" },
-  { name: "Headphone", items: 33, image: "src/assets/images/headphone.png", color: "#FFFCEB" },
-  { name: "Cake & Milk", items: 54, image: "src/assets/images/cake2.png", color: "#F2FCE4" },
-  { name: "Orange", items: 63, image: "src/assets/images/orange.png", color: "#FFF3FF" },
-];
+
+  import { defineProps } from "vue";
+  const props = defineProps({
+     categoryComp: {
+          type: Object,
+          required: true,
+      },
+  });
 </script>
 
 <style scoped>
   .categories-container {
     display: flex;
     gap: 20px;
-    width: 90%;
+    width: 100%;
     justify-content: center;
   }
 

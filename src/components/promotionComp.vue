@@ -1,20 +1,19 @@
 <template>
-  <div style="width: 90%; margin-left: -39px;">
-    <div style="gap: 20px; width: 512px; height: 300px;">
+  <div style="width: 100%; display: flex; justify-content: center; margin: auto; flex-direction: column; gap: 20px;">
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
       <div
-        v-for="(promo, index) in promos"
+        v-for="(promo, index) in props.promotionComp"
         :key="index"
-        :class="promo.bg"
+        class="promo-card"
         :style="{ backgroundColor: promo.color }"
+        style="width: 500px;"
       >
         <div class="con1">
-          <h3>
-            {{ promo.title }}
-          </h3>
-          <buttonComp />
-        </div class="con2">
-        <div>
-          <img :src="promo.image" :alt="promo.title"/>
+          <h3>{{ promo.title }}</h3>
+          <buttonComp :promotion-comp="promo" />
+        </div>
+        <div class="con2">
+          <img :src="promo.image" :alt="promo.title" />
         </div>
       </div>
     </div>
@@ -24,23 +23,14 @@
 <script setup>
   import buttonComp from './buttonComp.vue';
 
-const promos = [
-  {
-    title: "Everyday Fresh & Clean with Our Products",
-    image: "src/assets/images/onion.png",
-    color: "#F0E8D5",
-  },
-  {
-    title: "Make your Breakfast Healthy and Easy",
-    image: "src/assets/images/juice.png",
-    color: "#F3E8E8",
-  },
-  {
-    title: "The best Organic Products Online",
-    image: "src/assets/images/basket.png",
-    color: "#E7EAF3",
-  },
-];
+  import { defineProps } from "vue";
+
+  const props = defineProps({
+      promotionComp: {
+          type: Object,
+          required: true,
+      },
+  });
 </script>
 
 <style scoped>
@@ -53,12 +43,13 @@ const promos = [
   h3 {
     font-size: 20px;
     font-family: 'Arial', sans-serif;
+    width: 100%;
   }
 
   .con1 {
-    display: flex;
     flex-direction: column;
     justify-content: center;
+    width: 50%;
   }
 
   img {
