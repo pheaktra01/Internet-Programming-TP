@@ -16,28 +16,31 @@ class ProductController extends Controller
     }
 
     // --- Post /api/products
-    public function createProduct(Request $request)
-    {
+    public function createProduct(Request $request){
+
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name'        => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'pricing' => 'required|numeric',
+            'pricing'     => 'required|numeric',
             'description' => 'nullable|string',
-            'images' => 'nullable|array',
+            'images'      => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+
+        $imagePath = null;
+
+        if ($request->hasFile('images')) {
+            $imagePath = $request->file('images')->store('products', 'public');
+        }
 
         $product = Product::create([
-            'name' => $request->name,
+            'name'        => $request->name,
             'category_id' => $request->category_id,
-            'pricing' => $request->pricing,
+            'pricing'     => $request->pricing,
             'description' => $request->description,
-            'images' => $request->images,
+            'images'      => $imagePath ? [$imagePath] : null,
         ]);
 
-        return response()->json([
-            'message' => 'Product created successfully',
-            'product' => $product
-        ], 201);
+        return response()->json($product, 201);
     }
 
     // --- Get /api/products/{productId}
@@ -53,29 +56,32 @@ class ProductController extends Controller
     }
 
     // --- Patch /api/products/{productId}
-    public function updateProduct(Request $request, $productId)
-    {
-        $product = Product::find($productId);
+    public function updateProduct(Request $request, $productId){
 
-        if (!$product) {
-            return response()->json(['message' => 'Product not found'], 404);
-        }
+        $product = Product::findOrFail($productId);
 
         $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'category_id' => 'sometimes|required|exists:categories,id',
-            'pricing' => 'sometimes|required|numeric',
-            'description' => 'nullable|string',
-            'images' => 'nullable|array',
+            'name'        => 'sometimes|string|max:255',
+            'category_id' => 'sometimes|exists:categories,id',
+            'pricing'     => 'sometimes|numeric',
+            'description' => 'sometimes|nullable|string',
+            'images'      => 'sometimes|nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $product->update($request->only(['name', 'category_id', 'pricing', 'description', 'images']));
+        if ($request->hasFile('images')) {
+            $imagePath = $request->file('images')->store('products', 'public');
+            $product->images = [$imagePath];
+            $product->save();
+        }
 
-        // Explicit JSON response
-        return response()->json([
-            'message' => 'Product updated successfully',
-            'product' => $product
-        ], 200);
+        $product->update($request->only([
+            'name',
+            'category_id',
+            'pricing',
+            'description',
+        ]));
+
+        return response()->json($product);
     }
 
     // --- Delete /api/products/{productId}
