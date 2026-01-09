@@ -97,4 +97,13 @@ class ProductController extends Controller
 
         return response()->json(['message' => 'Product deleted successfully']);
     }
+
+    public function store(Request $request)
+    {
+        abort_unless($request->user()->can('products.create'), 403);
+
+        // create product
+        return response()->json(['message' => 'Product created']);
+    }
+
 }

@@ -15,6 +15,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('/products', function () {
+        abort_unless(auth()->user()->can('products.create'), 403);
+    });
+
+    Route::put('/products/{id}', function () {
+        abort_unless(auth()->user()->can('products.update'), 403);
+    });
+
+    Route::delete('/products/{id}', function () {
+        abort_unless(auth()->user()->can('products.delete'), 403);
+    });
 });
 
 require __DIR__.'/auth.php';

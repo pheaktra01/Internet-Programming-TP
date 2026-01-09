@@ -79,4 +79,16 @@ class CategoryController extends Controller
 
         return response()->json(['message' => 'Category deleted successfully']);
     }
+
+    public function updateStatus(Request $request, Category $category)
+    {
+        $this->authorize('updateStatus', $category);
+
+        $category->update([
+            'status' => $request->status
+        ]);
+
+        return response()->json(['message' => 'Status updated']);
+    }
+
 }
