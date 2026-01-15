@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Comment extends Model
 {
     protected $fillable = [
-        'content',
+        'name',
         'commentable_id',
         'commentable_type',
         'user_id',

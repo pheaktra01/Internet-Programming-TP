@@ -5,6 +5,11 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\AudienceController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\QueryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +31,7 @@ Route::post('/login', function (Request $request) {
     $token = $user->createToken('mobile')->accessToken;
 
     return response()->json([
+        'name' => $user->name,
         'token' => $token
     ]);
 });
@@ -73,3 +79,16 @@ Route::middleware('auth:api')->group(function () {
             Route::delete('/{product}', 'deleteProduct');
         });
 });
+
+
+Route::post('/authors', [AuthorController::class, 'store']);
+Route::post('/articles', [ArticleController::class, 'store']);
+Route::post('/audiences', [AudienceController::class, 'store']);
+Route::post('/subscribe', [AudienceController::class, 'subscribe']);
+Route::post('/comments', [CommentController::class, 'store']);
+
+Route::get('/query/author-sao-articles', [QueryController::class, 'authorSaoArticles']);
+Route::get('/query/article-audiences', [QueryController::class, 'articleAudiences']);
+Route::get('/query/author-sok-audiences', [QueryController::class, 'authorSokAudiences']);
+Route::get('/query/samnang-comments', [QueryController::class, 'samnangComments']);
+Route::get('/query/comments-with-topic', [QueryController::class, 'commentsWithTopic']);
